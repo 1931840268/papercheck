@@ -1,0 +1,33 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+\begin{document}
+
+\begin{abstract}
+This paper presents a method for graph learning.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+Graph neural networks \cite{kipf2017gcn} have shown great success.
+See Section \ref{sec:method} for details.
+
+\section{Method}
+\label{sec:method}
+Let $x = f(W \cdot h)$ denote the output.
+The loss is $\mathcal{L} = \sum_{i} \ell_i$.
+
+As shown in Figure \ref{fig:arch}, we use attention.
+
+\begin{figure}[t]
+\centering
+\caption{Architecture overview}
+\label{fig:arch}
+\end{figure}
+
+\section{Conclusion}
+We presented a novel method.
+
+\bibliography{clean_refs}
+\end{document}

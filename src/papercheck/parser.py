@@ -55,22 +55,40 @@ def load_project(path: Path) -> TexProject:
     if path.is_file():
         root = path.parent
         main_file = path.name
+        single_file_mode = True
     else:
         root = path
         # Find main file (the one with \documentclass)
         main_file = _find_main_file(root)
+        single_file_mode = False
 
     project = TexProject(root=root, main_file=main_file)
 
-    # Load all .tex files
-    for tex_path in root.rglob("*.tex"):
-        rel = str(tex_path.relative_to(root))
-        project.tex_files[rel] = tex_path.read_text(encoding="utf-8", errors="replace")
-
-    # Load all .bib files
-    for bib_path in root.rglob("*.bib"):
-        rel = str(bib_path.relative_to(root))
-        project.bib_files[rel] = bib_path.read_text(encoding="utf-8", errors="replace")
+    if single_file_mode:
+        # Only load the specified file + .bib files in same directory
+        project.tex_files[main_file] = path.read_text(encoding="utf-8", errors="replace")
+        for bib_path in root.glob("*.bib"):
+            rel = str(bib_path.relative_to(root))
+            project.bib_files[rel] = bib_path.read_text(encoding="utf-8", errors="replace")
+        # Also load \input'd files
+        content = project.tex_files[main_file]
+        for match in _INPUT_RE.finditer(content):
+            input_name = match.group(1)
+            if not input_name.endswith(".tex"):
+                input_name += ".tex"
+            input_path = root / input_name
+            if input_path.exists():
+                project.tex_files[input_name] = input_path.read_text(
+                    encoding="utf-8", errors="replace"
+                )
+    else:
+        # Load all .tex files in project
+        for tex_path in root.rglob("*.tex"):
+            rel = str(tex_path.relative_to(root))
+            project.tex_files[rel] = tex_path.read_text(encoding="utf-8", errors="replace")
+        for bib_path in root.rglob("*.bib"):
+            rel = str(bib_path.relative_to(root))
+            project.bib_files[rel] = bib_path.read_text(encoding="utf-8", errors="replace")
 
     # Collect image files
     img_extensions = {".png", ".jpg", ".jpeg", ".pdf", ".eps", ".svg"}
