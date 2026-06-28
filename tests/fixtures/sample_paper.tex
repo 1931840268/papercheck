@@ -1,0 +1,89 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+
+\title{Knowledge Graph Embedding with Adaptive Mixing}
+\author{Anonymous Authors}  % anonymity issue: has \author
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We propose a novel knowledge graph embedding method that achieves
+state-of-the-art results on benchmark datasets.
+\end{abstract}
+
+\section{Introduction}
+Knowledge graphs are important for many applications.
+In order to learn representations, we need effective methods.
+% TODO: add motivation paragraph
+Our contributions are are as follows:  % repeated word: "are are"
+
+We previously showed in our earlier work that this approach works.  % anonymity violation
+
+\section{Related Work}
+\label{sec:related}
+TransE \cite{bordes2013transe} is a foundational method.
+RotatE \cite{sun2019rotate} uses rotation in complex space.
+Recent work \cite{undefined_paper} has shown improvements.  % undefined citation
+See also \cite{bordes2013transe, bordes2013transe} for details.  % duplicate in cite
+
+\subsection{Graph Neural Networks}
+\label{sec:gnn}
+
+\subsubsection{Message Passing}
+
+\section{Method}
+\label{sec:method}
+Let $\mathbf{x}$ denote the entity embedding. We compute
+$\bm{x} = f(\mathbf{W} \cdot \mathbf{x})$ which is  % notation inconsistency: \mathbf{x} vs \bm{x}
+the output of our model.
+
+The loss function is $\mathcal{L} = \sum_{i=1}^{N} \ell_i + \lambda ||\theta||^2
+
+The score function uses $\left( h, r, t \right$ to compute  % mismatched \left/\right
+
+As shown in Figure \ref{fig:architecture}, our method...  % undefined ref
+Results are in Table \ref{tab:results} and Figure \ref{fig:nonexistent}.  % undefined ref
+
+\section{Experiments}
+\label{sec:exp}
+
+\begin{table}
+\caption{Main results on FB15k-237}
+\label{tab:results}
+\begin{tabular}{lcc}
+\toprule
+Method & MRR & Hits@10 \\
+\midrule
+Ours & \textbf{0.391} & \textbf{0.562} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.8\linewidth]{figures/model_arch.png}  % missing file
+\caption{Model architecture}
+\label{fig:architecture}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\linewidth]{figures/results_plot}  % missing + no placement
+\caption{Results comparison}
+\label{fig:results_unreferenced}  % never referenced
+\end{figure}
+
+Our code is at github.com/realauthor/kg-model.  % anonymity: github URL
+
+\section{Conclusion}
+\label{sec:conclusion}
+We proposed a novel method. FIXME: write conclusion properly.
+
+% unused label:
+\label{sec:phantom_label}
+
+\bibliography{refs}
+\end{document}

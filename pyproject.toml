@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "papercheck"
+version = "0.1.0"
+description = "Pre-submission linter for LaTeX research papers. Catch desk-rejection issues before reviewers do."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+keywords = ["latex", "paper", "linter", "research", "presubmission", "academic", "writing"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Text Processing :: Markup :: LaTeX",
+]
+
+dependencies = [
+    "rich>=13.7",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.8"]
+
+[project.scripts]
+papercheck = "papercheck.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/1931840268/papercheck"
+Issues = "https://github.com/1931840268/papercheck/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/papercheck"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
