@@ -18,18 +18,22 @@ from papercheck.checks.figures import (
     check_missing_graphics,
     check_unreferenced_figures,
 )
+from papercheck.checks.language import check_language_quality
 from papercheck.checks.math import check_math_delimiters, check_notation_consistency
 from papercheck.checks.references import (
     check_duplicate_citations,
     check_uncited_bib_entries,
     check_undefined_citations,
 )
+from papercheck.checks.reproducibility import check_reproducibility
 from papercheck.checks.structure import (
     check_bibliography,
     check_document_class,
     check_missing_abstract,
     check_section_ordering,
 )
+from papercheck.checks.typography import check_typography
+from papercheck.checks.venue import check_venue_compliance
 from papercheck.models import CheckResult, TexProject
 from papercheck.parser import parse_bib_keys, parse_tex
 
@@ -84,6 +88,12 @@ def run_checks(project: TexProject, anonymous: bool = True) -> CheckResult:
         result.issues.extend(check_writing_issues(parsed, tex_name))
         result.issues.extend(check_empty_sections(parsed, tex_name))
 
+        # Typography
+        result.issues.extend(check_typography(parsed, tex_name))
+
+        # Language quality
+        result.issues.extend(check_language_quality(parsed, tex_name))
+
         # Figures
         result.issues.extend(check_missing_graphics(parsed, project, tex_name))
         result.issues.extend(check_unreferenced_figures(parsed, tex_name))
@@ -95,6 +105,8 @@ def run_checks(project: TexProject, anonymous: bool = True) -> CheckResult:
             result.issues.extend(check_section_ordering(parsed, tex_name))
             result.issues.extend(check_bibliography(parsed, tex_name))
             result.issues.extend(check_document_class(parsed, tex_name))
+            result.issues.extend(check_reproducibility(parsed, tex_name))
+            result.issues.extend(check_venue_compliance(parsed, tex_name))
 
     # Cross-file checks
     result.issues.extend(check_duplicate_labels(all_labels_with_loc))
