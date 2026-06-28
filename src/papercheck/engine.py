@@ -34,12 +34,42 @@ from papercheck.checks.structure import (
 )
 from papercheck.checks.typography import check_typography
 from papercheck.checks.venue import check_venue_compliance
-from papercheck.models import CheckResult, TexProject
+from papercheck.config import Config
+from papercheck.models import CheckResult, Issue, TexProject
 from papercheck.parser import parse_bib_keys, parse_tex
 
 
-def run_checks(project: TexProject, anonymous: bool = True) -> CheckResult:
+def _filter_issues(issues: list[Issue], config: Config) -> list[Issue]:
+    """Filter issues based on configuration (disabled rules, severity overrides)."""
+    filtered: list[Issue] = []
+    for issue in issues:
+        if config.is_rule_disabled(issue.code):
+            continue
+        # Apply severity override if configured
+        override = config.severity_overrides.get(issue.code)
+        if override is not None and override != issue.severity:
+            # Issue is frozen, reconstruct with new severity
+            issue = Issue(
+                code=issue.code,
+                message=issue.message,
+                severity=override,
+                category=issue.category,
+                location=issue.location,
+                suggestion=issue.suggestion,
+            )
+        filtered.append(issue)
+    return filtered
+
+
+def run_checks(
+    project: TexProject,
+    anonymous: bool = True,
+    config: Config | None = None,
+) -> CheckResult:
     """Run all checks on a LaTeX project."""
+    if config is None:
+        config = Config()
+
     result = CheckResult()
 
     # Parse all files
@@ -113,6 +143,9 @@ def run_checks(project: TexProject, anonymous: bool = True) -> CheckResult:
     for bib_name in project.bib_files:
         bib_keys = parse_bib_keys(project.bib_files[bib_name])
         result.issues.extend(check_uncited_bib_entries(all_cited_keys, bib_keys, bib_name))
+
+    # Apply config filtering (disabled rules, severity overrides)
+    result.issues = _filter_issues(result.issues, config)
 
     # Sort: errors first, then warnings, then info
     severity_order = {"error": 0, "warning": 1, "info": 2}
